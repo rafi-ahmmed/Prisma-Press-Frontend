@@ -1,6 +1,10 @@
+import { getMe } from '@/service/getme';
 
-
-export default function HomePage() {
+export default async function HomePage() {
    console.log(process.env.BACKEND_API_URL);
+
+   // const user = await getMe();
+   // console.log(user);
+
    return <>Home Page</>;
 }
