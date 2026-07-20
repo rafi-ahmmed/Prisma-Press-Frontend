@@ -19,8 +19,12 @@ export const getMe = async () => {
          // Authorization: accessToken as unknown as string,
          Authorization: `${accessToken.value}`,
          // Authorization: `Bearer ${accessToken}`,
-
          // Cookie: `accessToken=${accessToken}`,
+      },
+      cache: 'force-cache',
+      next: {
+         revalidate: 60 * 60 * 24,
+         tags: ['my-profile'],
       },
    });
 

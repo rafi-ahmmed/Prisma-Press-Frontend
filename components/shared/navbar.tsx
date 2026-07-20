@@ -21,6 +21,10 @@ import {
    DropdownMenuSeparator,
    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { logout } from '@/service/logout';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const navItems = [
    { label: 'Home', href: '/' },
@@ -70,16 +74,50 @@ const userMenuItems = [
 //     }
 // }
 
-// type navBarProps = {
-//    // user:
-// }
-
-
-export function Navbar({ user }:navBarProps) {
-   const handleLogout = () => {
-      console.log('Logout...');
-      // এখানে logout logic লিখবে
+type Iuser = {
+   success: boolean;
+   statusCode: number;
+   data: {
+      id: string;
+      name: string;
+      email: string;
+      activeStatus: string;
+      role: string;
+      createdAt: string;
+      updatedAt: string;
+      profile: {
+         id: string;
+         profilePhoto: string;
+         bio: string;
+         userId: string;
+         createdAt: string;
+         updatedAt: string;
+      };
    };
+};
+
+type navBarProps = {
+   user: Iuser;
+};
+
+export function Navbar({ user }: navBarProps) {
+   const [logedOut, setLogedOut] = useState(false);
+   const router = useRouter();
+
+   const handleLogout = async () => {
+      console.log('Logout...');
+      await logout();
+      setLogedOut(true);
+   };
+
+   useEffect(() => {
+      if (logedOut) {
+         toast.success('User logged out successfully!');
+         router.push('/login');
+      }
+   }, [logedOut, router]);
+
+   console.log('From Navbar', user);
 
    return (
       <header className="border-b bg-background">
@@ -113,60 +151,69 @@ export function Navbar({ user }:navBarProps) {
             </nav>
 
             {/* User Dropdown */}
-            <DropdownMenu>
-               <DropdownMenuTrigger asChild>
-                  <Button
-                     variant="ghost"
-                     size="icon"
-                     className="rounded-full p-0 hover:bg-transparent"
-                     aria-label="Open user menu"
-                  >
-                     <Avatar className="size-10 cursor-pointer bg-green-100">
-                        <AvatarFallback className="bg-green-100">
-                           <User
-                              className="size-5 text-green-600"
-                              strokeWidth={2.5}
-                           />
-                        </AvatarFallback>
-                     </Avatar>
-                  </Button>
-               </DropdownMenuTrigger>
 
-               <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                     <div className="flex flex-col gap-0.5">
-                        {/* <span className="text-sm font-medium">{}</span> */}
-                        <span className="text-xs font-normal text-muted-foreground">
-                           jane@acme.com
-                        </span>
-                     </div>
-                  </DropdownMenuLabel>
+            {user.success ? (
+               <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                     <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full p-0 hover:bg-transparent"
+                        aria-label="Open user menu"
+                     >
+                        <Avatar className="size-10 cursor-pointer bg-green-100">
+                           <AvatarFallback className="bg-green-100">
+                              <User
+                                 className="size-5 text-green-600"
+                                 strokeWidth={2.5}
+                              />
+                           </AvatarFallback>
+                        </Avatar>
+                     </Button>
+                  </DropdownMenuTrigger>
 
-                  <DropdownMenuSeparator />
+                  <DropdownMenuContent align="end" className="w-56">
+                     <DropdownMenuLabel>
+                        <div className="flex flex-col gap-0.5">
+                           <span className="text-sm font-medium">
+                              {user.data.name || 'Notfound'}
+                           </span>
+                           <span className="text-xs font-normal text-muted-foreground">
+                              {user.data.email || 'Notfound'}
+                           </span>
+                        </div>
+                     </DropdownMenuLabel>
 
-                  <DropdownMenuGroup>
-                     {userMenuItems.map((item) => {
-                        const Icon = item.icon;
+                     <DropdownMenuSeparator />
 
-                        return (
-                           <DropdownMenuItem key={item.href} asChild>
-                              <Link href={item.href}>
-                                 <Icon className="mr-2 h-4 w-4" />
-                                 <span>{item.label}</span>
-                              </Link>
-                           </DropdownMenuItem>
-                        );
-                     })}
-                  </DropdownMenuGroup>
+                     <DropdownMenuGroup>
+                        {userMenuItems.map((item) => {
+                           const Icon = item.icon;
 
-                  <DropdownMenuSeparator />
+                           return (
+                              <DropdownMenuItem key={item.href} asChild>
+                                 <Link href={item.href}>
+                                    <Icon className="mr-2 h-4 w-4" />
+                                    <span>{item.label}</span>
+                                 </Link>
+                              </DropdownMenuItem>
+                           );
+                        })}
+                     </DropdownMenuGroup>
 
-                  <DropdownMenuItem onClick={handleLogout}>
-                     <LogOutIcon className="mr-2 h-4 w-4" />
-                     <span>Log out</span>
-                  </DropdownMenuItem>
-               </DropdownMenuContent>
-            </DropdownMenu>
+                     <DropdownMenuSeparator />
+
+                     <DropdownMenuItem onClick={handleLogout}>
+                        <LogOutIcon className="mr-2 h-4 w-4" />
+                        <span>Log out</span>
+                     </DropdownMenuItem>
+                  </DropdownMenuContent>
+               </DropdownMenu>
+            ) : (
+               <Link className="cursor-pointer" href="/login">
+                  <Button className='rounded-full px-5'>Login</Button>
+               </Link>
+            )}
          </div>
       </header>
    );

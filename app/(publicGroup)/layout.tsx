@@ -6,7 +6,7 @@ const PublicLayout = async ({ children }: { children: React.ReactNode }) => {
    const user = await getMe();
    return (
       <div className="">
-         <Navbar user={user.data} />
+         <Navbar user={user} />
          {children}
       </div>
    );
