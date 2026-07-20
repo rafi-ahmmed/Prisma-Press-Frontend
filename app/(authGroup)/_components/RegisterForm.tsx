@@ -3,12 +3,14 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useActionState } from 'react';
+import { createUserAction } from '../../_services/authActions';
 
 const RegisterForm = () => {
+   const [state, action, pending] = useActionState(createUserAction, false);
+
    return (
-      <form
-         className=""
-      >
+      <form action={action} className="">
          <Card className="p-5 space-y-1 ">
             <Input
                className="py-5"
@@ -26,13 +28,19 @@ const RegisterForm = () => {
             />
             <Input
                className="py-5"
+               name="imgUrl"
+               type="url"
+               placeholder="Enter your profile URL"
+            />
+            <Input
+               className="py-5"
                name="password"
                type="password"
-               placeholder="Create a password password"
+               placeholder="Create a password"
                required
             />
 
-            <Button type="submit">Signup</Button>
+            <Button type="submit">{pending ? 'Creating' : 'Signup'}</Button>
          </Card>
       </form>
    );

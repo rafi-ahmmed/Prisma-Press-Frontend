@@ -101,23 +101,13 @@ type navBarProps = {
 };
 
 export function Navbar({ user }: navBarProps) {
-   const [logedOut, setLogedOut] = useState(false);
    const router = useRouter();
 
    const handleLogout = async () => {
-      console.log('Logout...');
       await logout();
-      setLogedOut(true);
+      toast.success('User Logged out successfully!');
+      router.push('/login');
    };
-
-   useEffect(() => {
-      if (logedOut) {
-         toast.success('User logged out successfully!');
-         router.push('/login');
-      }
-   }, [logedOut, router]);
-
-   console.log('From Navbar', user);
 
    return (
       <header className="border-b bg-background">
@@ -211,7 +201,7 @@ export function Navbar({ user }: navBarProps) {
                </DropdownMenu>
             ) : (
                <Link className="cursor-pointer" href="/login">
-                  <Button className='rounded-full px-5'>Login</Button>
+                  <Button className="rounded-full px-5">Login</Button>
                </Link>
             )}
          </div>

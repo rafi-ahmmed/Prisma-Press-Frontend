@@ -1,26 +1,7 @@
-'use server';
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-
-type LoginState = {
-   success: boolean;
-   statusCode: number;
-   message: string;
-   data: {
-      accessToken: string;
-      refreshToken: string;
-   };
-};
-
-export const loginAction = async (
-   prevState: LoginState,
-   actionPayload: FormData
-) => {
-   console.log('Previous State===', prevState);
-   const email = actionPayload.get('email');
-   const password = actionPayload.get('password');
-
+export const Login = async (email: string, password: string) => {
    const payload = {
       email,
       password,
