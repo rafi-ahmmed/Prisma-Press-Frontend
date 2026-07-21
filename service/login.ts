@@ -1,5 +1,5 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export const Login = async (email: string, password: string) => {
    const payload = {
@@ -27,9 +27,8 @@ export const Login = async (email: string, password: string) => {
          maxAge: 60 * 60 * 24 * 7,
          sameSite: 'lax',
       });
-
-      redirect('/dashboard', 'replace');
    }
+
 
    return result;
 };

@@ -3,6 +3,7 @@
 import { Login } from '@/service/login';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 type LoginState = {
    success: boolean;
@@ -28,8 +29,18 @@ export const loginAction = async (
 
    const result = await Login(email as string, password as string);
 
-   if (result.success) {
-      redirect('/dashboard');
+   console.log('login action', result);
+
+   const decodedData = jwt.decode(result.data.accessToken) as JwtPayload;
+
+   console.log(decodedData);
+
+   if (decodedData?.role === 'ADMIN') {
+      redirect('/admin-dashboard', 'replace');
+   } else if (decodedData?.role === 'USER') {
+      redirect('/dashboard', 'replace');
+   } else if (decodedData?.role === 'AUTHOR') {
+      redirect('/author-dashboard', 'replace');
    }
 
    return result;
@@ -65,10 +76,9 @@ export const createUserAction = async (prevState, actionPayload: FormData) => {
    const result = await res.json();
 
    const loginResult = await Login(email as string, password as string);
-
-   if (result.success && loginResult.success) {
+   if (loginResult.success) {
       redirect('/');
    }
 
-   return loginResult;
+   return result;
 };
