@@ -1,12 +1,13 @@
-'use server';
+'user server';
 
 import { cookies } from 'next/headers';
+import { json } from 'stream/consumers';
 
-export const getNewAccessToken = async () => {
-   const getStored = cookies();
+export const getRefreshToken = async () => {
+   const storedCookie = await cookies();
 
-   const refreshToken = (await getStored).get('refreshToken');
-   // console.log(accessToken.value);
+   const refreshToken = storedCookie.get('refreshToken')?.value as string;
+
    if (!refreshToken) {
       return {
          success: false,
@@ -14,18 +15,18 @@ export const getNewAccessToken = async () => {
       };
    }
 
-   const res = await fetch(
+   const accessToken = await fetch(
       `${process.env.BACKEND_API_URL}/api/auth/refresh-token`,
       {
          method: 'POST',
          headers: {
-            Cookie: `accessToken=${refreshToken.value}`,
+            Cookie: `refreshToken=${refreshToken}`,
          },
-         cache: 'no-store',
+         cache: 'no-cache',
       }
    );
 
-   const result = await res.json();
-   console.log(result);
+   const result = await accessToken.json();
+   console.log('New-accessToken', result);
    return result;
 };

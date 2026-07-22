@@ -1,6 +1,5 @@
 import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
-
 const verifyToken = (token: string, secret: string) => {
    try {
       const verifiedToken = jwt.verify(token, secret);
@@ -8,7 +7,6 @@ const verifyToken = (token: string, secret: string) => {
          success: true,
          data: verifiedToken,
       };
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
    } catch (error: any) {
       console.log('Token verification failed', error);
       return {
