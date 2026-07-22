@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useActionState } from 'react';
-import { createUserAction } from '../../_services/authActions';
+import { createUserAction } from '../_actions/authActions';
 
 const RegisterForm = () => {
    const [state, action, pending] = useActionState(createUserAction, false);

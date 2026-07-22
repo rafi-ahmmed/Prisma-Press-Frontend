@@ -29,8 +29,9 @@ import { useRouter } from 'next/navigation';
 const navItems = [
    { label: 'Home', href: '/' },
    { label: 'Dashboard', href: '/dashboard' },
-   { label: 'Projects', href: '/projects' },
-   { label: 'Team', href: '/team' },
+   { label: 'News', href: '/news' },
+   { label: 'Premium', href: '/premium' },
+   { label: 'Payment', href: '/payment' },
 ];
 
 const userMenuItems = [

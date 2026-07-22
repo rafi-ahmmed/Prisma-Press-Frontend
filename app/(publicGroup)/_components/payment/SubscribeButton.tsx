@@ -1,0 +1,26 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { useActionState, useEffect } from 'react';
+import { toast } from 'sonner';
+
+export function SubscribeButton() {
+   // const [state, action, pending] = useActionState(subscribePremium, null);
+
+   // useEffect(() => {
+   //    if (!state) return;
+
+   //    if (!state.success) {
+   //       toast.error(state.message || 'Failed to start checkout');
+   //    }
+   // }, [state]);
+
+   return (
+      <form>
+         <Button type="submit" className="w-full">
+            {/* {pending ? 'Redirecting...' : 'Subscribe Now'} */}
+            Subscribe Now
+         </Button>
+      </form>
+   );
+}
