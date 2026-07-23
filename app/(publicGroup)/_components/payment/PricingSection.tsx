@@ -8,19 +8,16 @@ import {
 } from '@/components/ui/card';
 import { CheckIcon } from 'lucide-react';
 import { SubscribeButton } from './SubscribeButton';
+import { getSubscriptionStatus } from '../../_actions/getSubscriptionStatus';
 
 export async function PricingSection() {
-   const statusResult = {
-      success: true,
-      data: {
-         isSubscribed: false,
-         currentPeriodEnd: '2026-12-31T00:00:00.000Z',
-      },
-   };
+   const statusResult = await getSubscriptionStatus();
+   console.log(statusResult);
 
    const isActive = Boolean(
-      statusResult.success && statusResult.data?.isSubscribed
+      statusResult?.success && statusResult?.data?.isSubscribe
    );
+   console.log(isActive)
 
    return (
       <Card className="mx-auto max-w-md">
@@ -31,9 +28,9 @@ export async function PricingSection() {
             </CardTitle>
 
             <CardDescription>
-               {isActive && statusResult.data?.currentPeriodEnd
+               {isActive && statusResult?.data?.currentPeriodEnd
                   ? `Renews on ${new Date(
-                       statusResult.data.currentPeriodEnd
+                       statusResult?.data.currentPeriodEnd
                     ).toLocaleDateString()}`
                   : 'Unlock every premium story, cancel anytime.'}
             </CardDescription>

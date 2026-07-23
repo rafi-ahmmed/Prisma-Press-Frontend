@@ -9,7 +9,7 @@ type NewsCardProps = {
    post: IPost;
 };
 
-export function NewsCard({ post }) {
+export function NewsCard({ post }: NewsCardProps) {
    const commentCount = post._count?.comments ?? post.comments?.length ?? 0;
 
    return (
@@ -26,6 +26,7 @@ export function NewsCard({ post }) {
                alt={post.title}
                width={400}
                height={400}
+               // placeholder='blur'
                // fill
             />
          )}

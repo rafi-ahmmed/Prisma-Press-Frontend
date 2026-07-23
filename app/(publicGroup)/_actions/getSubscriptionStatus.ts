@@ -1,7 +1,9 @@
-"use server"
-import { cookies } from 'next/headers';
+'use server';
 
-export const getPremiumNews = async () => {
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+export const getSubscriptionStatus = async () => {
    const getStored = cookies();
 
    const accessToken = (await getStored).get('accessToken');
@@ -13,18 +15,15 @@ export const getPremiumNews = async () => {
       };
    }
 
-   const res = await fetch(`${process.env.BACKEND_API_URL}/api/premium`, {
-      headers: {
-         Authorization: `${accessToken.value}`,
-      },
-      cache: 'force-cache',
-      next: {
-         revalidate: 60 * 60 * 6,
-         tags: ['premium-posts'],
-      },
-   });
+   const res = await fetch(
+      `${process.env.BACKEND_API_URL}/api/subscription/status`,
+      {
+         headers: {
+            Authorization: `${accessToken.value}`,
+         },
+      }
+   );
 
    const result = await res.json();
-
    return result;
 };

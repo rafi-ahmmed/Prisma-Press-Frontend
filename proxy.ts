@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { jwtUtils } from './utils/jwt';
 import { getRefreshToken } from './service/refreshToken';
+import { getSubscriptionStatus } from './app/(publicGroup)/_actions/getSubscriptionStatus';
 
 const AUTH_ROUTES = ['/login', '/register'];
 const PUBLIC_ROUTES = ['/', '/news'];
@@ -96,6 +97,34 @@ export async function proxy(request: NextRequest) {
    ) {
       return NextResponse.redirect(new URL('/not-found', request.url));
    }
+
+   //* Stop users to go premium page who was not a subscribe user
+   const subscriptionStatus = await getSubscriptionStatus();
+   const isActive = Boolean(
+      subscriptionStatus?.success && subscriptionStatus?.data?.isSubscribe
+   );
+   if (pathname === '/premium') {
+      const subscriptionStatus = await getSubscriptionStatus();
+      const isActive = Boolean(
+         subscriptionStatus?.success && subscriptionStatus?.data?.isSubscribe
+      );
+
+      if (!isActive) {
+         return NextResponse.redirect(new URL('/payment', request.url));
+      }
+   }
+
+   //* Stop users to go payment page who are already subscribed user
+   // if (pathname === '/payment') {
+   //    if (isActive) {
+   //       return NextResponse.redirect(new URL('/premium', request.url));
+   //    }
+   // }
+
+
+
+
+
 
    return NextResponse.next();
 }

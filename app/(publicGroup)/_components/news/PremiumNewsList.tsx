@@ -8,8 +8,8 @@ export async function PremiumNewsList() {
 
    if (!result.success || !result.data.length) {
       return (
-         <p className="py-12 text-center text-muted-foreground">
-            No premium news found.
+         <p className="py-12 text-center  text-red-700">
+            {result.message || ' No premium news found.'}
          </p>
       );
    }
